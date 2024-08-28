@@ -12,8 +12,12 @@ class Estacion extends Model
     // Especificar la conexión a la base de datos secundaria
     protected $connection = 'segunda_db';
 
+
     // Especificar la tabla asociada al modelo
     protected $table = 'estacion';
+
+    // Definir la clave primaria
+    protected $primaryKey = 'id_estacion';
 
     // Definir los campos que pueden ser asignados masivamente
     protected $fillable = [
@@ -29,5 +33,4 @@ class Estacion extends Model
         'nombre_representante_legal',
         'usuario_id',
     ];
-
 }
