@@ -1,5 +1,5 @@
 <!-- ======= Footer ======= -->
- <center></center>
+<center></center>
 <footer id="footer" class="footer">
     <div class="copyright">
         &copy; Copyright <strong><span>Grupo SMACA</span></strong>. All Rights Reserved
@@ -7,6 +7,9 @@
 </footer><!-- End Footer -->
 
 <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+
+<!-- Agregar jQuery -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 <!-- Vendor JS Files -->
 <script src="{{ asset('assets/vendor/apexcharts/apexcharts.min.js') }}"></script>
@@ -20,5 +23,3 @@
 
 <!-- Template Main JS File -->
 <script src="{{ asset('assets/js/main.js') }}"></script>
-
-<!-- Script para manejar el envío del formulario -->

@@ -1,5 +1,5 @@
 @php
-    use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Auth;
 @endphp
 
 <style>
@@ -27,7 +27,7 @@
         /* Ajusta el tamaño según sea necesario */
     }
 </style>
- 
+
 
 <header id="header" class="header fixed-top d-flex align-items-center">
 
@@ -45,41 +45,23 @@
 
     <nav class="header-nav ms-auto">
         <ul class="d-flex align-items-center">
-            <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-            <script>
-                $(document).ready(function () {
-                    function fetchNotifications() {
-                        $.get('/fetch-notifications', function (data) {
-                            $('#notifications-container').html(data);
-                        });
-                    }
-
-                    setInterval(fetchNotifications, 5000);
-                    fetchNotifications();
-                });
-            </script>
-            @if(auth()->check() && auth()->user()->hasRole('Administrador'))
-                <div id="notifications-container" class="d-flex align-items-center">
-                    @include('partials.notifications-servicios')
-                </div>
-            @endif
 
             <li class="nav-item dropdown pe-4">
 
                 <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#" data-bs-toggle="dropdown">
                     <!-- <img src="{{ asset('assets/img/profile-img.jpg') }}" alt="Profile" class="rounded-circle">-->
                     @auth
-                        <span class="d-none d-md-block dropdown-toggle ps-2">{{ Auth::user()->name }}</span>
+                    <span class="d-none d-md-block dropdown-toggle ps-2">{{ Auth::user()->name }}</span>
                     @endauth
                 </a><!-- End Profile Iamge Icon -->
 
                 <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow profile">
                     <li class="dropdown-header">
                         @auth
-                            <h6>{{ Auth::user()->name }}</h6>
-                            @foreach(Auth::user()->getRoleNames() as $role)
-                                <span>{{ $role }}</span>
-                            @endforeach
+                        <h6>{{ Auth::user()->name }}</h6>
+                        @foreach(Auth::user()->getRoleNames() as $role)
+                        <span>{{ $role }}</span>
+                        @endforeach
                         @endauth
                     </li>
                     <li>
@@ -88,11 +70,11 @@
 
                     <li>
                         @if (Auth::check() && Route::has('usuarios.showchangepasswordform'))
-                            <a class="dropdown-item d-flex align-items-center"
-                                href="{{ route('usuarios.showchangepasswordform', ['id' => Auth::user()->id]) }}">
-                                <i class="bi bi-person"></i>
-                                <span>Cambiar Contraseña</span>
-                            </a>
+                        <a class="dropdown-item d-flex align-items-center"
+                            href="{{ route('usuarios.showchangepasswordform', ['id' => Auth::user()->id]) }}">
+                            <i class="bi bi-person"></i>
+                            <span>Cambiar Contraseña</span>
+                        </a>
                         @endif
                     </li>
 
