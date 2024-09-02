@@ -53,7 +53,7 @@ class DireccionesController extends Controller
             // Iniciar una transacción para la segunda base de datos
             DB::connection('segunda_db')->beginTransaction();
 
-            // Obtener la estación desde la segunda base de datos
+            // Obtener la estación desde la segunda base de datos 
             $estacion = Estacion::on('segunda_db')->findOrFail($estacionId);
 
             // Determina el tipo de dirección

@@ -19,7 +19,7 @@ class Direccion extends Model
         'numero_int',
         'colonia',
         'codigo_postal',
-        'localidad_id',
+        'localidad',
         'municipio_id',
         'entidad_federativa_id',
         'id_estacion'
