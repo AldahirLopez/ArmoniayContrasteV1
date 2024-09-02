@@ -3,21 +3,25 @@
 
 namespace App\Models\Estados;
 
+use App\Models\Direccion;
 use Illuminate\Database\Eloquent\Model;
 
 class Estados extends Model
 {
-    // Define the table if it's not the plural form of the model name
     protected $connection = 'segunda_db';  // Conexión a la segunda base de datos
-    protected $table = 'states';
+    protected $table = 'states';  // Nombre de la tabla
 
-    // Define the primary key if it's not the default 'id'
-    protected $primaryKey = 'id';
+    protected $primaryKey = 'id';  // Clave primaria
 
-    // Define any other properties or relationships as needed
-    // Relación con Municipios
+    // Relación con Municipios (uno a muchos)
     public function municipios()
     {
         return $this->hasMany(Municipios::class, 'id_state');
+    }
+
+    // Relación con Direcciones (uno a muchos)
+    public function direcciones()
+    {
+        return $this->hasMany(Direccion::class, 'entidad_federativa_id');
     }
 }

@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\Estados\Estados;
+use App\Models\Estados\Municipios;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -35,9 +36,26 @@ class Estacion extends Model
         'usuario_id',
     ];
 
-    // Relación con Estados
+    // Relación con Estados en vista estaciones
     public function estado()
     {
         return $this->belongsTo(Estados::class, 'estado_id');
+    }
+
+    public function municipios()
+    {
+        return $this->hasMany(Municipios::class, 'id_state', 'estado_id');
+    }
+
+    // Relación uno a uno con la dirección fiscal
+    public function direccionFiscal()
+    {
+        return $this->hasOne(Direccion::class, 'id_direccion', 'domicilio_fiscal_id');
+    }
+
+    // Relación uno a uno con la dirección de la estación
+    public function direccionServicio()
+    {
+        return $this->hasOne(Direccion::class, 'id_direccion', 'domicilio_servicio_id');
     }
 }

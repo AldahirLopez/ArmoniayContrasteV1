@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Estacion;
 use App\Models\Estados\Estados;
+use App\Models\Estados\Municipios;
 use App\Models\Usuario_Estacion;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -23,10 +24,13 @@ class EstacionController extends Controller
         $usuario = Auth::user();
         $estados = Estados::where('id_country', 42)->get();
 
-        // Obtener estaciones según el rol del usuario
+        // Obtener las estaciones según el rol del usuario
         $estaciones = $this->obtenerEstacionesPorUsuario($usuario);
 
-        return view('armonia.estaciones.listar-estaciones.listar', compact('usuario', 'estados', 'estaciones'));
+        // Obtener todos los municipios relacionados con los estados de las estaciones
+        $municipios = Municipios::whereIn('id_state', $estaciones->pluck('estado_id'))->get();
+
+        return view('armonia.estaciones.listar-estaciones.listar', compact('usuario', 'estados', 'estaciones', 'municipios'));
     }
 
     public function store(Request $request)
@@ -101,16 +105,25 @@ class EstacionController extends Controller
     private function obtenerEstacionesPorUsuario($usuario)
     {
         if ($usuario->hasAnyRole(['Administrador', 'Auditor'])) {
-            return Estacion::all();
+            $estaciones = Estacion::with('municipios')->get();
+        } else {
+            $estacionesDirectas = Estacion::where('usuario_id', $usuario->id)
+                ->with('municipios') // Cargar los municipios relacionados
+                ->get();
+
+            $estacionesRelacionadas = Usuario_Estacion::where('usuario_id', $usuario->id)
+                ->with(['estacion.municipios']) // Cargar los municipios de las estaciones relacionadas
+                ->get()
+                ->pluck('estacion');
+
+            $estaciones = $estacionesDirectas->merge($estacionesRelacionadas)->unique('id');
         }
 
-        $estacionesDirectas = Estacion::where('usuario_id', $usuario->id)->get();
+        // Para cada estación, obtener los municipios basados en el estado_id
+        foreach ($estaciones as $estacion) {
+            $estacion->municipios = Municipios::where('id_state', $estacion->estado_id)->get();
+        }
 
-        $estacionesRelacionadas = Usuario_Estacion::where('usuario_id', $usuario->id)
-            ->with('estacion') // Usa el método with() para optimizar la consulta
-            ->get()
-            ->pluck('estacion');
-
-        return $estacionesDirectas->merge($estacionesRelacionadas)->unique('id');
+        return $estaciones;
     }
 }

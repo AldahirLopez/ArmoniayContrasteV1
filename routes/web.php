@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\DireccionesController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\RolController;
 use App\Http\Controllers\UsuarioController;
@@ -42,4 +43,15 @@ Route::group(['middleware' => ['auth']], function () {
     Route::resource('estaciones', EstacionController::class);
 
     Route::get('/estaciones/listar', [EstacionController::class, 'show'])->name('estaciones.listar');
+
+    //Direcciones de las estaciones 
+
+    Route::get('/estaciones/{estacion}/direcciones', [DireccionesController::class, 'index'])->name('direcciones.index');
+    Route::post('/estaciones/{estacion}/direcciones', [DireccionesController::class, 'store'])->name('direcciones.store');
+
+
+    Route::get('/municipios/{estado_id}', [DireccionesController::class, 'getMunicipios'])->name('getMunicipios');
+    Route::get('/direcciones/{id}', [DireccionesController::class, 'show'])->name('direcciones.show');
+
+
 });
