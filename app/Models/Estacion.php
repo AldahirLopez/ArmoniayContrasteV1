@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Estados\Estados;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -33,4 +34,10 @@ class Estacion extends Model
         'nombre_representante_legal',
         'usuario_id',
     ];
+
+    // Relación con Estados
+    public function estado()
+    {
+        return $this->belongsTo(Estados::class, 'estado_id');
+    }
 }

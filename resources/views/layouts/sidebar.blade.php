@@ -9,7 +9,7 @@
             </a>
         </li><!-- End Dashboard Nav -->
 
-        @if(auth()->check() && auth()->user()->hasRole('Administrador'))
+ 
         <li class="nav-item">
             <a class="nav-link collapsed" data-bs-target="#usuarios-nav" data-bs-toggle="collapse" href="#">
                 <i class="bi bi-people"></i><span>Usuarios</span><i class="bi bi-chevron-down ms-auto"></i>
@@ -35,8 +35,6 @@
                 </li>
             </ul>
         </li>
-        @endif
-
 
 
         @if(auth()->check() && auth()->user()->hasRole(['Administrador']))
@@ -49,13 +47,6 @@
                 <span>Estaciones de servicio</span>
             </a>
         </li>
-
         @endif
-
-
-
-
     </ul>
-
-
 </aside>

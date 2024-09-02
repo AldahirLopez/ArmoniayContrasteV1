@@ -65,21 +65,17 @@ return [
 
         'segunda_db' => [
             'driver' => 'mysql',
-            'url' => env('DATABASE_URL_SECONDARY'),
             'host' => env('DB_HOST_SECONDARY', '127.0.0.1'),
             'port' => env('DB_PORT_SECONDARY', '3306'),
-            'database' => env('DB_DATABASE_SECONDARY', 'forge'),
-            'username' => env('DB_USERNAME_SECONDARY', 'forge'),
+            'database' => env('DB_DATABASE_SECONDARY', 'armoniasadecv'),
+            'username' => env('DB_USERNAME_SECONDARY', 'root'),
             'password' => env('DB_PASSWORD_SECONDARY', ''),
-            'unix_socket' => env('DB_SOCKET_SECONDARY', ''),
+            'unix_socket' => env('DB_SOCKET', ''),
             'charset' => 'utf8mb4',
             'collation' => 'utf8mb4_unicode_ci',
             'prefix' => '',
             'strict' => true,
             'engine' => null,
-            'options' => extension_loaded('pdo_mysql') ? array_filter([
-                PDO::MYSQL_ATTR_SSL_CA => env('MYSQL_ATTR_SSL_CA'),
-            ]) : [],
         ],
 
         'tercera_db' => [
@@ -164,7 +160,7 @@ return [
 
         'options' => [
             'cluster' => env('REDIS_CLUSTER', 'redis'),
-            'prefix' => env('REDIS_PREFIX', Str::slug(env('APP_NAME', 'laravel'), '_').'_database_'),
+            'prefix' => env('REDIS_PREFIX', Str::slug(env('APP_NAME', 'laravel'), '_') . '_database_'),
         ],
 
         'default' => [

@@ -2,98 +2,78 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
-
-//Spatie
 use Spatie\Permission\Models\Permission;
 
 class SeederTablaPermisos extends Seeder
 {
-    /**
-     * Run the database seeds.
-     *
-     * @return void
-     */
     public function run()
     {
         $permisos = [
-            //Tabla roles
-            'crear-rol',
-            'editar-rol',
-            'borrar-rol',
+            // Gestión de Roles
+            'gestionar-roles-crear',
+            'gestionar-roles-editar',
+            'gestionar-roles-eliminar',
 
-            //Tabla Usuarios
-            'ver-usuarios',
-            'crear-usuarios',
-            'editar-usuarios',
-            'borrar-usuarios',
+            // Gestión de Usuarios
+            'gestionar-usuarios-ver',
+            'gestionar-usuarios-crear',
+            'gestionar-usuarios-editar',
+            'gestionar-usuarios-eliminar',
 
-            //Tabla Operacion y Mantenimiento
-            'ver-servicio_operacion_mantenimiento',
-            'crear-servicio_operacion_mantenimiento',
-            'borrar-servicio_operacion_mantenimiento',
-                //PARTE DE EXPEDIENTE 
-            'Generar-expediente-operacion',
-            'Descargar-documentos-expediente-operacion',
-                //PARTE DE DOCUMENTACION
-            'Generar-documentacion-operacion',
-            'Descargar-documentacion-operacion',   
-                //PARTE DE COTIZACION
-            'Descargar-cotizacion-operacion',
-            'Generar-cotizacion-operacion',
-                //PARTE DE PAGO
-            'Ver-pagos',
-            'Subir-pago-operacion',
-            'Descargar-pago-operacion',
-                //PARTE DE FACTURA
-            'Subir-factura-operacion',
-            'Descargar-factura-operacion',
+            // Operación y Mantenimiento
+            'gestionar-om-ver',
+            'gestionar-om-crear',
+            'gestionar-om-eliminar',
+            'gestionar-om-expediente-generar',
+            'gestionar-om-expediente-descargar',
+            'gestionar-om-documentacion-generar',
+            'gestionar-om-documentacion-descargar',
+            'gestionar-om-cotizaciones-generar',
+            'gestionar-om-cotizaciones-descargar',
+            'gestionar-om-pagos-ver',
+            'gestionar-om-pagos-subir',
+            'gestionar-om-pagos-descargar',
+            'gestionar-om-facturas-subir',
+            'gestionar-om-facturas-descargar',
 
+            // Servicios Anexo 30
+            'gestionar-anexo30-ver',
+            'gestionar-anexo30-crear',
+            'gestionar-anexo30-eliminar',
+            'gestionar-anexo30-expediente-generar',
+            'gestionar-anexo30-expediente-descargar',
+            'gestionar-anexo30-documentacion-generar',
+            'gestionar-anexo30-cotizaciones-generar',
+            'gestionar-anexo30-cotizaciones-descargar',
+            'gestionar-anexo30-pagos-ver',
+            'gestionar-anexo30-pagos-subir',
+            'gestionar-anexo30-pagos-descargar',
+            'gestionar-anexo30-facturas-subir',
+            'gestionar-anexo30-facturas-descargar',
+            'gestionar-anexo30-dictamenes-generar',
 
+            // Gestión de Estaciones
+            'gestionar-estaciones-ver',
+            'gestionar-estaciones-crear',
+            'gestionar-estaciones-editar',
+            'gestionar-estaciones-eliminar',
+            'gestionar-estaciones-expediente-generar',
+            'gestionar-estaciones-expediente-descargar',
 
+            // Formatos Vigentes
+            'gestionar-formatos-vigentes-ver',
+            'gestionar-formatos-vigentes-crear',
+            'gestionar-formatos-vigentes-editar',
+            'gestionar-formatos-vigentes-eliminar',
 
-
-            //Tabla Servicios Anexo 30
-            'ver-servicio_anexo_30',
-            'crear-servicio_anexo_30',           
-            'borrar-servicio_anexo_30',
-                //PARTE DE EXPEDIENTE
-            'Generar-expediente-anexo_30',
-            'Descargar-documentos-expediente-anexo_30',
-                //PARTE DE DOCUMENTACION
-            'Generar-documentacion-anexo_30',
-                //PARTE DE COTIZACION
-            'Generar-cotizacion-anexo_30', 
-            'Descargar-cotizacion-anexo_30',
-                //PARTE DE PAGO
-            'Ver-pagos-anexo_30',
-            'Subir-pago-anexo_30',
-            'Descargar-pago-anexo_30',
-                //PARTE DE FACTURA
-            'Subir-factura-anexo_30',
-            'Descargar-factura-anexo_30',
-
-                //LISTA DE INSPECCION
-
-                //DICTAMENES
-            'Generar-dictamenes-anexo',
-        
-
-            //Tabla Formatos Vigentes
-            'ver-formato_vigentes',
-            'crear-formato_vigentes',
-            'editar-formato_vigentes',
-            'borrar-formato_vigentes',
-
-            //Tabla Formatos Historial
-            'ver-formato_historial',
-            'crear-formato_historial',
-            'editar-formato_historial',
-            'borrar-formato_historial',
-
-
+            // Formatos Historial
+            'gestionar-formatos-historial-ver',
+            'gestionar-formatos-historial-crear',
+            'gestionar-formatos-historial-editar',
+            'gestionar-formatos-historial-eliminar',
         ];
+
         foreach ($permisos as $permiso) {
             Permission::create(['name' => $permiso]);
         }
