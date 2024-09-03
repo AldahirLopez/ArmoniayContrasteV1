@@ -1231,3 +1231,78 @@ h6 {
   font-size: 13px;
   color: #012970;
 }
+
+/* Estilos generales para el modo oscuro */
+body.dark-mode {
+  background: #121212;
+  color: #e0e0e0;
+}
+
+body.dark-mode a {
+  color: #bb86fc;
+}
+
+body.dark-mode a:hover {
+  color: #3700b3;
+}
+
+body.dark-mode h1,
+body.dark-mode h2,
+body.dark-mode h3,
+body.dark-mode h4,
+body.dark-mode h5,
+body.dark-mode h6 {
+  color: #e0e0e0;
+}
+
+body.dark-mode .card {
+  background-color: #1f1f1f;
+  color: #e0e0e0;
+  box-shadow: 0px 0 30px rgba(0, 0, 0, 0.5);
+}
+
+body.dark-mode .card-header,
+body.dark-mode .card-footer {
+  background-color: #2c2c2c;
+  color: #bb86fc;
+}
+
+body.dark-mode .header,
+body.dark-mode .sidebar {
+  background-color: #1f1f1f;
+  color: #e0e0e0;
+}
+
+body.dark-mode .footer {
+  background-color: #1f1f1f;
+  border-top: 1px solid #333;
+}
+
+body.dark-mode .sidebar-nav .nav-link {
+  background: #2c2c2c;
+  color: #bb86fc;
+}
+
+body.dark-mode .sidebar-nav .nav-link:hover {
+  background: #3700b3;
+}
+
+body.dark-mode .breadcrumb {
+  color: #bb86fc;
+}
+
+body.dark-mode .breadcrumb a:hover {
+  color: #3700b3;
+}
+
+body.dark-mode .alert {
+  background-color: #333;
+  color: #e0e0e0;
+}
+
+body.dark-mode .dashboard .info-card {
+  background-color: #2c2c2c;
+  color: #e0e0e0;
+}
+
+/* Personaliza otros elementos según sea necesario */

@@ -11,78 +11,44 @@
                 <div class="card">
                     <div class="card-body">
                         <div class="mb-3">
-                            <a href="{{ route('estaciones.index') }}" class="btn btn-danger"><i class="bi bi-arrow-return-left"></i> Volver</a>
+                            <a href="{{route('estaciones.listar')}}" class="btn btn-danger">
+                                <i class="bi bi-arrow-return-left"></i>
+                            </a>
                         </div>
 
                         <table class="table table-striped">
                             <thead>
                                 <tr>
-                                    <th scope="col">Tipo de Dirección</th>
-                                    <th scope="col">Calle</th>
-                                    <th scope="col">Número Exterior</th>
-                                    <th scope="col">Número Interior</th>
-                                    <th scope="col">Colonia</th>
-                                    <th scope="col">Código Postal</th>
-                                    <th scope="col">Localidad</th>
-                                    <th scope="col">Municipio</th>
-                                    <th scope="col">Estado</th>
-                                    <th scope="col">Acciones</th>
+                                    @foreach (['Tipo de Dirección', 'Calle', 'Número Exterior', 'Número Interior', 'Colonia', 'Código Postal', 'Localidad', 'Municipio', 'Estado', 'Acciones'] as $header)
+                                    <th scope="col">{{ $header }}</th>
+                                    @endforeach
                                 </tr>
                             </thead>
                             <tbody>
-                                <!-- Fila para Dirección Fiscal -->
+                                @foreach (['fiscal' => $estacion->direccionFiscal, 'servicio' => $estacion->direccionServicio] as $tipo => $direccion)
                                 <tr>
-                                    <td>Fiscal</td>
-                                    @if($estacion->direccionFiscal)
-                                    <td>{{ optional($estacion->direccionFiscal)->calle }}</td>
-                                    <td>{{ optional($estacion->direccionFiscal)->numero_ext }}</td>
-                                    <td>{{ optional($estacion->direccionFiscal)->numero_int }}</td>
-                                    <td>{{ optional($estacion->direccionFiscal)->colonia }}</td>
-                                    <td>{{ optional($estacion->direccionFiscal)->codigo_postal }}</td>
-                                    <td>{{ optional($estacion->direccionFiscal)->localidad }}</td>
-                                    <td>{{ optional($estacion->direccionFiscal->municipio)->description }}</td>
-                                    <td>{{ optional($estacion->direccionFiscal->estado)->description }}</td>
+                                    <td>{{ ucfirst($tipo) }}</td>
+                                    @if($direccion)
+                                    @foreach (['calle', 'numero_ext', 'numero_int', 'colonia', 'codigo_postal', 'localidad'] as $campo)
+                                    <td>{{ $direccion->$campo }}</td>
+                                    @endforeach
+                                    <td>{{ optional($direccion->municipio)->description }}</td>
+                                    <td>{{ optional($direccion->estado)->description }}</td>
                                     <td>
-                                        <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#direccionModal" data-tipo="fiscal">
-                                            <i class="bi bi-pencil-fill"></i> Editar
+                                        <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#direccionModal" data-tipo="{{ $tipo }}" data-id="{{ $direccion->id_direccion }}">
+                                            <i class="bi bi-pencil-fill"></i>
                                         </button>
                                     </td>
                                     @else
-                                    <td colspan="8">No hay dirección fiscal registrada</td>
+                                    <td colspan="8">No hay dirección {{ $tipo }} registrada</td>
                                     <td>
-                                        <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#agregarDireccionModal" data-tipo="fiscal">
-                                            <i class="bi bi-plus-circle"></i> Agregar
+                                        <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#agregarDireccionModal" data-tipo="{{ $tipo }}">
+                                            <i class="bi bi-plus-circle"></i>
                                         </button>
                                     </td>
                                     @endif
                                 </tr>
-
-                                <!-- Fila para Dirección de la Estación -->
-                                <tr>
-                                    <td>Estación</td>
-                                    @if($estacion->direccionServicio)
-                                    <td>{{ optional($estacion->direccionServicio)->calle }}</td>
-                                    <td>{{ optional($estacion->direccionServicio)->numero_ext }}</td>
-                                    <td>{{ optional($estacion->direccionServicio)->numero_int }}</td>
-                                    <td>{{ optional($estacion->direccionServicio)->colonia }}</td>
-                                    <td>{{ optional($estacion->direccionServicio)->codigo_postal }}</td>
-                                    <td>{{ optional($estacion->direccionServicio)->localidad }}</td>
-                                    <td>{{ optional($estacion->direccionServicio->municipio)->description }}</td>
-                                    <td>{{ optional($estacion->direccionServicio->estado)->description }}</td>
-                                    <td>
-                                        <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#direccionModal" data-tipo="servicio">
-                                            <i class="bi bi-pencil-fill"></i> Editar
-                                        </button>
-                                    </td>
-                                    @else
-                                    <td colspan="8">No hay dirección de la estación registrada</td>
-                                    <td>
-                                        <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#agregarDireccionModal" data-tipo="servicio">
-                                            <i class="bi bi-plus-circle"></i> Agregar
-                                        </button>
-                                    </td>
-                                    @endif
-                                </tr>
+                                @endforeach
                             </tbody>
                         </table>
                     </div>
@@ -92,120 +58,116 @@
     </div>
 </section>
 
-<!-- Modal para agregar dirección -->
-<div class="modal fade" id="agregarDireccionModal" tabindex="-1" aria-labelledby="agregarDireccionModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header bg-primary text-white">
-                <h5 class="modal-title" id="agregarDireccionModalLabel">Agregar Dirección</h5>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <form id="agregarDireccionForm" method="POST" action="{{ route('direcciones.store', $estacion->id_estacion) }}">
-                @csrf
-                <div class="modal-body">
-                    <!-- Campo oculto para tipo de dirección -->
-                    <input type="hidden" name="tipo_direccion" id="tipo_direccion_agregar">
+@include('armonia.estaciones.partials.direccion-modal', [
+'modalId' => 'agregarDireccionModal',
+'modalTitle' => 'Agregar Dirección',
+'btnClass' => 'btn-primary',
+'btnText' => 'Guardar',
+'formId' => 'agregarDireccionForm',
+'action' => route('direcciones.store', $estacion->id_estacion),
+])
 
-                    <!-- Campo para Estado -->
-                    <div class="mb-3">
-                        <label for="entidad_federativa_id_agregar" class="form-label">Estado</label>
-                        <select name="entidad_federativa_id" id="entidad_federativa_id_agregar" class="form-control" required>
-                            <option value="">Selecciona un estado</option>
-                            @foreach($estados as $estado)
-                            <option value="{{ $estado->id }}">{{ $estado->description }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-
-                    <!-- Campo para Municipio -->
-                    <div class="mb-3">
-                        <label for="municipio_id_agregar" class="form-label">Municipio</label>
-                        <select name="municipio_id" id="municipio_id_agregar" class="form-control" required>
-                            <option value="">Selecciona un municipio</option>
-                            <!-- Los municipios se cargarán dinámicamente -->
-                        </select>
-                    </div>
-
-                    <!-- Resto de los campos del formulario -->
-                    <div class="mb-3">
-                        <label for="calle_agregar" class="form-label">Calle</label>
-                        <input type="text" name="calle" id="calle_agregar" class="form-control" required>
-                    </div>
-
-                    <div class="mb-3">
-                        <label for="numero_ext_agregar" class="form-label">Número Exterior</label>
-                        <input type="text" name="numero_ext" id="numero_ext_agregar" class="form-control" required>
-                    </div>
-
-                    <div class="mb-3">
-                        <label for="numero_int_agregar" class="form-label">Número Interior</label>
-                        <input type="text" name="numero_int" id="numero_int_agregar" class="form-control">
-                    </div>
-
-                    <div class="mb-3">
-                        <label for="colonia_agregar" class="form-label">Colonia</label>
-                        <input type="text" name="colonia" id="colonia_agregar" class="form-control" required>
-                    </div>
-
-                    <div class="mb-3">
-                        <label for="codigo_postal_agregar" class="form-label">Código Postal</label>
-                        <input type="text" name="codigo_postal" id="codigo_postal_agregar" class="form-control" required>
-                    </div>
-
-                    <div class="mb-3">
-                        <label for="localidad_agregar" class="form-label">Localidad</label>
-                        <input type="text" name="localidad" id="localidad_agregar" class="form-control" required>
-                    </div>
-                </div>
-
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                    <button type="submit" class="btn btn-primary">Guardar</button>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
-
+@include('armonia.estaciones.partials.direccion-modal', [
+'modalId' => 'direccionModal',
+'modalTitle' => 'Editar Dirección',
+'btnClass' => 'btn-warning',
+'btnText' => 'Actualizar',
+'formId' => 'editarDireccionForm',
+'action' => route('direcciones.store', $estacion->id_estacion),
+'isEdit' => true
+])
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        const estadoSelectAgregar = document.getElementById('entidad_federativa_id_agregar');
-        const municipioSelectAgregar = document.getElementById('municipio_id_agregar');
-
-        estadoSelectAgregar.addEventListener('change', function() {
-            const estadoId = this.value;
-
-            // Limpiar el select de municipios
-            municipioSelectAgregar.innerHTML = '<option value="">Selecciona un municipio</option>';
-
-            if (estadoId) {
-                fetch(`/municipios/${estadoId}`)
-                    .then(response => response.json())
-                    .then(data => {
-                        data.forEach(municipio => {
-                            const option = document.createElement('option');
-                            option.value = municipio.id;
-                            option.textContent = municipio.description;
-                            municipioSelectAgregar.appendChild(option);
-                        });
-                    })
-                    .catch(error => console.error('Error al cargar los municipios:', error));
-            }
-        });
-
         const agregarDireccionModal = document.getElementById('agregarDireccionModal');
+
         agregarDireccionModal.addEventListener('show.bs.modal', function(event) {
             const button = event.relatedTarget;
             const tipo = button.getAttribute('data-tipo');
 
-            const tipoDireccionInput = document.getElementById('tipo_direccion_agregar');
+            // Configurar el tipo de dirección en el formulario de agregar
+            document.getElementById('tipo_direccion_agregar').value = tipo;
 
-            tipoDireccionInput.value = tipo;
-
-            // Limpiar el formulario cuando se abre el modal
+            // Limpiar los campos del formulario de agregar dirección
             document.getElementById('agregarDireccionForm').reset();
         });
+
+        const direccionModal = document.getElementById('direccionModal');
+        direccionModal.addEventListener('show.bs.modal', function(event) {
+            const button = event.relatedTarget;
+            const direccionId = button.getAttribute('data-id');
+            const tipo = button.getAttribute('data-tipo');
+
+            // Configurar el formulario para el tipo y el ID de la dirección
+            document.getElementById('tipo_direccion_editar').value = tipo;
+            document.getElementById('direccion_id_editar').value = direccionId;
+
+            // Limpiar y cargar el formulario con los datos existentes
+            document.getElementById('editarDireccionForm').reset();
+
+            // Fetch para obtener los datos actuales de la dirección
+            fetch(`/direcciones/${direccionId}/edit`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.error) {
+                        console.error('Error al cargar los datos de la dirección:', data.error);
+                        return;
+                    }
+
+                    // Completar el formulario con los datos existentes
+                    const estadoSelect = document.getElementById('entidad_federativa_id_editar');
+                    const municipioSelect = document.getElementById('municipio_id_editar');
+
+                    estadoSelect.value = data.entidad_federativa_id;
+
+                    // Cargar municipios dinámicamente y luego preseleccionar el correcto
+                    loadMunicipios(estadoSelect, municipioSelect).then(() => {
+                        municipioSelect.value = data.municipio_id;
+                    });
+
+                    // Completar los demás campos del formulario
+                    document.getElementById('calle_editar').value = data.calle || '';
+                    document.getElementById('numero_ext_editar').value = data.numero_ext || '';
+                    document.getElementById('numero_int_editar').value = data.numero_int || '';
+                    document.getElementById('colonia_editar').value = data.colonia || '';
+                    document.getElementById('codigo_postal_editar').value = data.codigo_postal || '';
+                    document.getElementById('localidad_editar').value = data.localidad || '';
+                })
+                .catch(error => console.error('Error al cargar los datos de la dirección:', error));
+        });
+
+        // Cargar municipios dinámicamente
+        const loadMunicipios = (select, target) => {
+            return new Promise((resolve, reject) => {
+                select.addEventListener('change', function() {
+                    const estadoId = this.value;
+                    target.innerHTML = '<option value="">Selecciona un municipio</option>';
+                    if (estadoId) {
+                        fetch(`/municipios/${estadoId}`)
+                            .then(response => response.json())
+                            .then(data => {
+                                data.forEach(municipio => {
+                                    const option = document.createElement('option');
+                                    option.value = municipio.id;
+                                    option.textContent = municipio.description;
+                                    target.appendChild(option);
+                                });
+                                resolve();
+                            })
+                            .catch(error => {
+                                console.error('Error al cargar los municipios:', error);
+                                reject(error);
+                            });
+                    }
+                });
+
+                // Trigger the change event manually to load municipios on edit modal load
+                select.dispatchEvent(new Event('change'));
+            });
+        };
+
+        loadMunicipios(document.getElementById('entidad_federativa_id_agregar'), document.getElementById('municipio_id_agregar'));
+        loadMunicipios(document.getElementById('entidad_federativa_id_editar'), document.getElementById('municipio_id_editar'));
     });
 </script>
 @endsection

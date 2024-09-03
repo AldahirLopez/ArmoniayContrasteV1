@@ -48,6 +48,7 @@ Route::group(['middleware' => ['auth']], function () {
 
     Route::get('/estaciones/{estacion}/direcciones', [DireccionesController::class, 'index'])->name('direcciones.index');
     Route::post('/estaciones/{estacion}/direcciones', [DireccionesController::class, 'store'])->name('direcciones.store');
+    Route::get('/direcciones/{id}/edit', [DireccionesController::class, 'edit'])->name('direcciones.edit');
 
 
     Route::get('/municipios/{estado_id}', [DireccionesController::class, 'getMunicipios'])->name('getMunicipios');

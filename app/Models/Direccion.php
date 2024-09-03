@@ -10,6 +10,7 @@ class Direccion extends Model
 {
     protected $connection = 'segunda_db';  // Conexión a la segunda base de datos
     protected $table = 'direcciones';  // Nombre de la tabla
+    protected $primaryKey = 'id_direccion';
 
     // Campos que se pueden llenar masivamente
     protected $fillable = [

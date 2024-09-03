@@ -13,7 +13,6 @@ use Illuminate\Support\Facades\DB;
 
 class DireccionesController extends Controller
 {
-
     public function index($idEstacion)
     {
         // Cargar la estación con las relaciones necesarias
@@ -24,7 +23,7 @@ class DireccionesController extends Controller
             'direccionServicio.estado'
         ])->findOrFail($idEstacion);
 
-        // Filtrar los estados donde id_country es 42
+        // Filtrar los estados donde id_country es 42 Mexico
         $estados = Estados::where('id_country', 42)->get();
 
         // Cargar todos los municipios
@@ -33,20 +32,20 @@ class DireccionesController extends Controller
         return view('armonia.estaciones.direcciones.index', compact('estacion', 'estados', 'municipios'));
     }
 
-
     public function store(Request $request, $estacionId)
     {
         // Validar los datos recibidos
         $validatedData = $request->validate([
-            'tipo_direccion' => 'required|string|max:50',
-            'calle' => 'required|string|max:255',
-            'numero_ext' => 'required|string|max:10',
-            'numero_int' => 'nullable|string|max:10',
-            'colonia' => 'required|string|max:255',
-            'codigo_postal' => 'required|integer',
-            'localidad' => 'required|string|max:50',
+            'tipo_direccion' => 'required',
+            'calle' => 'required',
+            'numero_ext' => 'required',
+            'numero_int' => 'nullable',
+            'colonia' => 'required',
+            'codigo_postal' => 'required',
+            'localidad' => 'required',
             'municipio_id' => 'required|exists:segunda_db.municipalities,id',
             'entidad_federativa_id' => 'required|exists:segunda_db.states,id',
+            'direccion_id' => 'nullable|exists:segunda_db.direcciones,id_direccion' // Añadido para ediciones
         ]);
 
         try {
@@ -59,23 +58,23 @@ class DireccionesController extends Controller
             // Determina el tipo de dirección
             $tipoDireccion = $validatedData['tipo_direccion'];
 
-            // Verifica si la dirección ya existe
-            if ($tipoDireccion === 'fiscal') {
-                $direccion = $estacion->direccionFiscal;
-            } elseif ($tipoDireccion === 'servicio') {
-                $direccion = $estacion->direccionServicio;
-            }
+            // Verifica si ya existe una dirección para el tipo dado
+            $direccion = null;
 
-            // Si existe, actualiza la dirección, si no, crea una nueva
-            if ($direccion) {
+            if (isset($validatedData['direccion_id']) && $validatedData['direccion_id']) {
+                // Si se proporciona un ID de dirección, buscamos la dirección para actualizarla
+                $direccion = Direccion::on('segunda_db')->findOrFail($validatedData['direccion_id']);
                 $direccion->update($validatedData);
             } else {
+                // Si no existe, se crea una nueva dirección
                 $direccion = Direccion::on('segunda_db')->create($validatedData);
-                if ($tipoDireccion === 'fiscal') {
-                    $estacion->domicilio_fiscal_id = $direccion->id;
-                } elseif ($tipoDireccion === 'servicio') {
-                    $estacion->domicilio_servicio_id = $direccion->id;
-                }
+            }
+
+            // Asociar la dirección recién creada o actualizada a la estación
+            if ($tipoDireccion === 'fiscal') {
+                $estacion->domicilio_fiscal_id = $direccion->id_direccion;
+            } elseif ($tipoDireccion === 'servicio') {
+                $estacion->domicilio_servicio_id = $direccion->id_direccion;
             }
 
             // Guarda los cambios en la estación
@@ -92,10 +91,6 @@ class DireccionesController extends Controller
             return redirect()->back()->with('error', 'Error al guardar la dirección: ' . $e->getMessage());
         }
     }
-
-
-
-
     public function getMunicipios(Request $request)
     {
         $municipios = Municipios::where('id_state', $request->estado_id)->get();
@@ -110,5 +105,17 @@ class DireccionesController extends Controller
         } catch (\Exception $e) {
             return response()->json(['error' => 'Error al cargar la dirección: ' . $e->getMessage()], 500);
         }
+    }
+    public function edit($id)
+    {
+        // Buscar la dirección por ID
+        $direccion = Direccion::on('segunda_db')->find($id);
+
+        if (!$direccion) {
+            return response()->json(['error' => 'Dirección no encontrada'], 404);
+        }
+
+        // Retornar los datos en formato JSON
+        return response()->json($direccion);
     }
 }

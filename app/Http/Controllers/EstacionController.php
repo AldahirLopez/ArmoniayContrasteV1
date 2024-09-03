@@ -35,16 +35,21 @@ class EstacionController extends Controller
 
     public function store(Request $request)
     {
+        // Validar los datos de la solicitud
         $validatedData = $request->validate([
-            'numestacion' => 'required|unique:segunda_db.estacion,num_estacion|max:10',
+            'numestacion' => 'required|unique:segunda_db.estacion,num_estacion',
             'razonsocial' => 'required|string|max:255',
             'rfc' => 'required|string',
             'estado' => 'required|exists:segunda_db.states,id',
+        ], [
+            // Personalizar el mensaje de error para numestacion único
+            'numestacion.unique' => 'El número de estación ya existe.',
         ]);
 
         try {
             $idUsuario = Auth::id();
 
+            // Crear la estación con los datos validados
             Estacion::create([
                 'num_estacion' => $validatedData['numestacion'],
                 'razon_social' => $validatedData['razonsocial'],
@@ -55,9 +60,11 @@ class EstacionController extends Controller
 
             return redirect()->route('estaciones.listar')->with('success', 'Estación creada exitosamente.');
         } catch (\Exception $e) {
-            return redirect()->back()->with('error', 'Error al crear la estación: ' . $e->getMessage());
+            // Capturar cualquier excepción durante la creación y devolver un mensaje de error
+            return redirect()->route('estaciones.listar')->with('error', 'Ocurrió un error al crear la estación.');
         }
     }
+
 
     public function destroy($id)
     {
@@ -110,7 +117,7 @@ class EstacionController extends Controller
             $estacionesDirectas = Estacion::where('usuario_id', $usuario->id)
                 ->with('municipios') // Cargar los municipios relacionados
                 ->get();
-
+ 
             $estacionesRelacionadas = Usuario_Estacion::where('usuario_id', $usuario->id)
                 ->with(['estacion.municipios']) // Cargar los municipios de las estaciones relacionadas
                 ->get()

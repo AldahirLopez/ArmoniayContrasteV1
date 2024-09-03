@@ -1,5 +1,4 @@
 @extends('layouts.app')
-
 @section('content')
 <section class="section">
     <div class="section-header">
@@ -13,7 +12,7 @@
                         <div class="mb-3">
                             <a href="{{ route('estaciones.index') }}" class="btn btn-danger"><i class="bi bi-arrow-return-left"></i></a>
                             <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#generarEstacionModal">
-                                Generar Nueva Estación
+                                Nueva Estación
                             </button>
                         </div>
 
@@ -37,7 +36,7 @@
                                     <td>{{ $estacion->estado->description }}</td>
                                     <td>
                                         <a href="{{ route('direcciones.index', $estacion->id_estacion) }}" class="btn btn-info">
-                                            <i class="bi bi-eye"></i> Ver Direcciones
+                                            <i class="bi bi-eye"></i>
                                         </a>
                                     </td>
                                     <td>
@@ -55,9 +54,6 @@
                                         @endcan
                                     </td>
                                 </tr>
-
-
-
                                 <!-- Incluir el Partial del Modal de Edición -->
                                 @include('armonia.estaciones.partials.editar-modal-estacion', ['estacion' => $estacion, 'estados' => $estados])
                                 @endforeach
@@ -68,10 +64,7 @@
             </div>
         </div>
     </div>
-
     <!-- Modal para generar nueva estación -->
     @include('armonia.estaciones.partials.generar-modal-estacion', ['estados' => $estados, 'usuario' => $usuario])
-
-
 </section>
 @endsection

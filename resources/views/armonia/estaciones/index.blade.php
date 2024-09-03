@@ -16,7 +16,7 @@
                             <h2 class="text-right"><i class="bi bi-check-circle-fill"></i></h2>
                             <div class="d-flex flex-column justify-content-between align-items-center">
                                 <h2><span></span></h2>
-                                <p class="m-b-0 text-right"><a href="#">Ver
+                                <p class="m-b-0 text-right"><a href="{{route('estaciones.listar')}}">Ver
                                         más...</a>
                                 </p>
                             </div>
